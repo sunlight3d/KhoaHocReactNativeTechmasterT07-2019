@@ -21,7 +21,7 @@ class Firebase {
         app.initializeApp(config);
         this.auth = app.auth()
         this.db = app.database()
-        console.log('Init database')
+        // alert(`this.db = ${this.db}`)
     }
     sayHello = () => {
         alert('Chao cac ban')
@@ -34,18 +34,9 @@ class Firebase {
     
 
 }
-const FirebaseContext = React.createContext()  
-const withFirebase = Component => (props) => {
-    return <FirebaseContext.Consumer>
-        {
-            firebase => <Component {...props} firebase={firebase}></Component>
-        }
-    </FirebaseContext.Consumer>
-}
+const firebase = new Firebase()
 export {
-    Firebase,
-    FirebaseContext, 
-    withFirebase
+    firebase,    
 }
 
 
