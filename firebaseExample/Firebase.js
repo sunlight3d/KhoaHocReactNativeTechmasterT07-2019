@@ -22,6 +22,8 @@ class Firebase {
         this.auth = app.auth()
         this.db = app.database()
         // alert(`this.db = ${this.db}`)
+        //Tham khao https://firebase.google.com/docs/database/web/read-and-write
+        //this.db.ref("dd")
     }
     sayHello = () => {
         alert('Chao cac ban')
