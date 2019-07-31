@@ -2,9 +2,10 @@
 import React from 'react'
 import {Text, View} from 'react-native'
 
-const ComponentB = (props) => {
+//function-style component. VD: Header
+const ComponentB = ({x, y}) => {    
     return <View>
-        <Text>This is component B</Text>
+        <Text style={{fontSize: 30}}>x= {x}, y = {y}</Text>
     </View>
 }
 export {

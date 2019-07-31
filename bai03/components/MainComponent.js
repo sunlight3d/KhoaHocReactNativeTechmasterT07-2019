@@ -33,7 +33,7 @@ export default class MainComponent extends Component {
 
     }
     componentDidMount() {
-        this.doTask123() 
+        //this.doTask123() 
     }
     //render
     render() {        
@@ -45,8 +45,9 @@ export default class MainComponent extends Component {
             <Text style={styles.centerText}>
                 Hello world
             </Text>
-            <ComponentA />
-            <ComponentB />
+            {/* name, email is props(public, readonly properties) */}
+            <ComponentA name={"Hoang"} email={"hoang12@gmail.com"}/>
+            <ComponentB x={1} y={2}/>
         </SafeAreaView>)
     }
 }
