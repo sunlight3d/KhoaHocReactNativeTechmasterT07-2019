@@ -1,6 +1,4 @@
 import * as firebase from "firebase/app";
-
-// Add the Firebase products that you want to use
 import "firebase/auth";
 import "firebase/database";
 
@@ -8,7 +6,7 @@ import "firebase/database";
 const firebaseConfig = {
     apiKey: "AIzaSyDPSxXShX9ewn7Aqjl-8ubPpKGHGTnyeg0",
     authDomain: "reactnativetutorial-d247d.firebaseapp.com",
-    databaseURL: "https://project-id.firebaseio.com",
+    databaseURL: "https://reactnativetutorial-d247d.firebaseio.com",
     projectId: "reactnativetutorial-d247d",
     storageBucket: "reactnativetutorial-d247d.appspot.com",
     messagingSenderId: "994950783513",
@@ -21,14 +19,9 @@ class FirebaseManager {
         this.database = firebase.database()
         this.authentication = firebase.auth()
     }
-    createUserWithEmailAndPassword = async (email, password) => {
-        try {
-            await this.authentication.createUserWithEmailAndPassword(email, password)
-        } catch(error) {
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            console.log(`Error = ${errorMessage}`)
-        }
+    createUserWithEmailAndPassword = (email, password) => {
+        //login facebook, login gmail,... 
+        return this.authentication.createUserWithEmailAndPassword(email, password)
     }
     signInWithEmailAndPassword = (email, password) => {
         return this.authentication.signInWithEmailAndPassword(email, password)

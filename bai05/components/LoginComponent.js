@@ -8,8 +8,12 @@ import {View,
     TouchableHighlight,
     KeyboardAvoidingView, 
     ScrollView, 
-    Text
+    ActivityIndicator,
+    Dimensions,
+    Text,    
 } from 'react-native'
+import { COLOR_GREEN, COLOR_RED, globalCSS, COLOR_ORANGE} from '../GlobalCSS'
+const {width, height} = Dimensions.get('window')
 import {firebaseManager} from '../Firebase/Firebase'
 export default class LoginComponent extends Component {
     constructor(props) {
@@ -20,7 +24,8 @@ export default class LoginComponent extends Component {
             email: '',
             password: '',
             validateEmail:'',
-            validatePassword:''
+            validatePassword:'',
+            isLoading: false
         }
     }
     componentDidMount() {        
@@ -30,6 +35,7 @@ export default class LoginComponent extends Component {
                 // alert(`uid = ${uid}`)
             } 
         })
+        this.setState({email: 'hoang@gmail.com', password: '123456'})
     }
     _validateEmail(text){
         //Regular Expression
@@ -39,17 +45,26 @@ export default class LoginComponent extends Component {
     signIn() {
         let { email = "", password=""} = this.state
         //alert(`firebaseManager = ${firebaseManager}`)
-        firebaseManager.signInWithEmailAndPassword(email, password).then(user => {
-            alert(`success login, user = ${JSON.stringify(user)}`)
+        this.setState({isLoading: true})
+        firebaseManager.signInWithEmailAndPassword(email, password).then(result => {
+            const {uid, email} = result.user                        
+            this.props.navigation.navigate('ProductsComponent', {uid, email})
+            this.setState({isLoading: false})
         }).catch(error => {
             alert(`sign in failed: ${error}`)
+            this.setState({isLoading: false})
         })
     }
     render() {
         console.log(`this.state.colodddd = ${this.state.borderColorOfText}`)
-        let {validateEmail, validatePassword} = this.state
+        let {validateEmail, validatePassword, isLoading,
+            email, password,
+            } = this.state
         
         return <SafeAreaView style={styles.container}>
+            {isLoading && <View style={styles.loadingView}>                
+                <ActivityIndicator size="large" color="red" />
+            </View>}
             <KeyboardAvoidingView style={styles.container} 
                     keyboardVerticalOffset = {20}
                     behavior="padding">
@@ -64,6 +79,9 @@ export default class LoginComponent extends Component {
                 placeholder = {"Enter your email"}
                 keyboardType={"email-address"}
                 secureTextEntry={false}
+                autoCapitalize={"none"}
+                autoCorrect={false}
+                value={email}
                 onChangeText = {(email) => {
                     this.setState({email})
                     if(this._validateEmail(email) == false) {
@@ -80,6 +98,7 @@ export default class LoginComponent extends Component {
                 keyboardType={"default"}
                 secureTextEntry={true}
                 style={styles.textInput}
+                value={password}
                 onChangeText = {(password) => {
                     this.setState({password})
                     if(password.length <  3) {
@@ -90,27 +109,32 @@ export default class LoginComponent extends Component {
                 }}
             />
             {validatePassword.length > 0 && <Text style={styles.checkInput}>{validatePassword}</Text>}
+            
             <TouchableOpacity style={styles.loginButton}
                 onPress={() => {
                         this.signIn()                                        
                 }}
             >
-                <Text style={styles.loginButtonText}>Login</Text>
-            </TouchableOpacity>    
+                <Text style={[styles.loginButtonText, {backgroundColor: COLOR_GREEN}]}>Login</Text>
+            </TouchableOpacity>
+           
             <TouchableOpacity style={styles.registerButton}
                 onPress= {() => {
                     //destructuring
                     let {email, password} = this.state
-                    //alert(`email = ${email}, password = ${password}`)
-                    firebaseManager.createUserWithEmailAndPassword(email, password).then((result) => {
-                        
+                    //alert(`email = ${email}, password = ${password}`)   
+                    this.setState({isLoading: true})                 
+                    firebaseManager.createUserWithEmailAndPassword(email, password).then(() => {
+                        alert("register user successfully")
+                        this.setState({isLoading: false})
                     }).catch(error => {
                         alert(`register failed: ${error}`)
+                        this.setState({isLoading: false})
                     })
                 }}
             >
-                <Text style={styles.registerButtonText}>Register</Text>
-            </TouchableOpacity>   
+                <Text style={[styles.registerButtonText, {backgroundColor: COLOR_ORANGE}]}>Register</Text>
+            </TouchableOpacity>
             </ScrollView>     
             </KeyboardAvoidingView> 
         </SafeAreaView>        
@@ -121,7 +145,17 @@ const styles = StyleSheet.create({
         flex: 1,
         width: '100%',
         flexDirection: 'column',
-        alignItems: 'center'
+        alignItems: 'center',        
+    },
+    loadingView: {
+        position: 'absolute',
+        top: 0,
+        left: 0, 
+        width, height,
+        backgroundColor:'rgba(0,0,0, 0.2)',
+        zIndex: 2,
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     imageProfile: {
         width: 140,
