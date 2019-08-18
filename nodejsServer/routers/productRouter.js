@@ -1,5 +1,5 @@
 /**
- Khoá học FullStackNodejs 2018 - Techmaster Vietnam
+ Khoá học FullStackNodejs 2019 - Techmaster Vietnam
  Instructor: Nguyễn Đức Hoàng
  Routers for "Product" collection
  */
@@ -7,9 +7,6 @@ const express = require('express')
 const router = express.Router()
 const path = require('path')
 const fs = require('fs')//fs = file system
-const promisify = require('util').promisify //Thư viện này có sẵn trong Nodejs
-const readdir = promisify(fs.readdir) //Hàm này lấy các file/folder trong thư mục
-const lstat = promisify(fs.lstat) //lstat = "list status"
 
 const { 	
     insertProduct,
@@ -22,6 +19,7 @@ router.use((req, res, next) => {
     console.log('Time: ', Date.now()) //Time log
     next()
 })
+// http://127.0.0.1:3000/products/insertProduct
 router.post('/insertProduct', async (req, res) =>{
     let {name, description, imageURL} = req.body
     //Client phải gửi tokenKey
@@ -39,8 +37,7 @@ router.post('/insertProduct', async (req, res) =>{
         })
 	}
 })
-//VD1: http://127.0.0.1:3000/blogposts/queryProducts?text=kinh nghiệm
-//VD2: http://127.0.0.1:3000/blogposts/queryProducts?text=xe
+
 router.get('/queryProducts', async (req, res) =>{	
     debugger;
 	let {text} = req.query
@@ -93,6 +90,7 @@ router.get('/getDetailProduct', async (req, res) =>{
 	}
 })
 //PUT method => để update data
+//http://127.0.0.1:3000/products/updateProduct
 router.put('/updateProduct', async (req, res) =>{			
     let {id} = req.body
     let updatedProduct = req.body
@@ -110,6 +108,7 @@ router.put('/updateProduct', async (req, res) =>{
         })
 	}
 })
+http://127.0.0.1:3000/products/deleteProduct
 router.delete('/deleteProduct', async (req, res) =>{		
 	let {id} = req.body	
 	// let tokenKey = req.headers['x-access-token']	
@@ -127,6 +126,7 @@ router.delete('/deleteProduct', async (req, res) =>{
 	}
 })
 //Upload multiple files
+// http://127.0.0.1:3000/products/uploads
 router.post('/uploads', async (req, res) => {
     //Dữ liệu files đc lưu tại : req.files    
     try {

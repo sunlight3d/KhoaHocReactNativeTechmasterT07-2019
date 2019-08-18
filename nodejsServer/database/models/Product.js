@@ -51,7 +51,7 @@ const getDetailProduct = async (productId) => {
     try {        
         let product = await Product.findById(productId)
         if (!product) {
-            throw `Không tìm thấy blogpost với Id=${productId}`
+            throw `Không tìm thấy product với Id=${productId}`
         }
         return product
     } catch(error) {        
@@ -79,7 +79,8 @@ const updateProduct = async (productId,updatedProduct) => {
     }
 }
 const deleteProduct = async (productId) => {
-    try {        
+    try {    
+        debugger    
         let product = await Product.findById(productId)
         if (!product) {
             throw `Không tìm thấy blogpost với Id=${productId}`

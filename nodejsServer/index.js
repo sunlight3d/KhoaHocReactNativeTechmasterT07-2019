@@ -1,5 +1,5 @@
 /**
- Khoá học FullStackNodejs 2018 - Techmaster Vietnam
+ Khoá học FullStackNodejs 2019 - Techmaster Vietnam
  Instructor: Nguyễn Đức Hoàng
  Viết api đăng nhập user với mật khẩu được mã hoá
  Cần cài một số thư viện sau:
@@ -7,6 +7,7 @@
  npm install -i express
  npm install -i body-parser
  */
+
 const express = require('express') //import express from 'express'
 const app = express()
 var cors = require('cors')
