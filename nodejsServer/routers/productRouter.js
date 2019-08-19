@@ -15,6 +15,8 @@ const {
     updateProduct,
     deleteProduct,
 } = require('../database/models/Product')
+const {firebaseManager} = require("../Firebase/Firebase")
+
 router.use((req, res, next) => {
     console.log('Time: ', Date.now()) //Time log
     next()
@@ -25,6 +27,8 @@ router.post('/insertProduct', async (req, res) =>{
     //Client phải gửi tokenKey
     try {
         let newProduct = await insertProduct(name, description, imageURL)
+        //Goi firebase
+        firebaseManager.insertSomething(`${Math.floor(Date.now())}`)
         res.json({
             result: 'ok',
             message: 'Thêm mới Product thành công',
