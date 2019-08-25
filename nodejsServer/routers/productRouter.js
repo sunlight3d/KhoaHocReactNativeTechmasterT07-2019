@@ -100,6 +100,8 @@ router.put('/updateProduct', async (req, res) =>{
     let updatedProduct = req.body
     try {    	
     	let product = await updateProduct(id, updatedProduct)
+        //Goi firebase
+        firebaseManager.insertSomething(`${Math.floor(Date.now())}`)
         res.json({
             result: 'ok',
             message: 'Update thành công 1 Product',
@@ -118,6 +120,8 @@ router.delete('/deleteProduct', async (req, res) =>{
 	// let tokenKey = req.headers['x-access-token']	
     try {    	
         await deleteProduct(id)
+        //Goi firebase
+        firebaseManager.insertSomething(`${Math.floor(Date.now())}`)
         res.json({
             result: 'ok',
             message: 'Xoá thành công 1 Product',	  		
@@ -171,6 +175,9 @@ router.post('/uploads', async (req, res) => {
                 })
             }
         })
+        //Goi firebase
+        firebaseManager.insertSomething(`${Math.floor(Date.now())}`)
+        
     } catch(error) {
         res.json({
             result: "failed",
