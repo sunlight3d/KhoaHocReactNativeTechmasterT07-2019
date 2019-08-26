@@ -1,3 +1,9 @@
+*.PNG
+*.png
+*.jpg
+*.JPEG
+*.JPG
+*.fpeg
 .DS_Store
 # Logs
 logs
