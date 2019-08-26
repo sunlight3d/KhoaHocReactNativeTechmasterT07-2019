@@ -153,9 +153,10 @@ router.post('/uploads', async (req, res) => {
             })
             return
         }
+        let imageNames = []
         keys.forEach( async (key) => {            
             const fileName = `${Math.random().toString(36)}`
-            const fileObject = await req.files[key]
+            const fileObject = await req.files[key]            
             const fileExtension = fileObject.name.split('.').pop()
             const destination = `${path.join(__dirname, '..')}/uploads/${fileName}.${fileExtension}`
             let error = await fileObject.mv(destination) //mv = move 
@@ -166,12 +167,14 @@ router.post('/uploads', async (req, res) => {
                 })
                 return
             }
+            imageNames.push(`${fileName}.${fileExtension}`)
             //Kiểm tra file cuối cùng trong list ?
+            debugger
             if (key === keys[keys.length - 1]) {
                 res.json({
                     result: "ok",
                     message: `Upload files successfully`,
-                    imageURL: `${fileName}.${fileExtension}`
+                    imageNames
                 })
             }
         })
