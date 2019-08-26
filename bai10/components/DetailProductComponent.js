@@ -10,9 +10,12 @@ import {View,
     ScrollView, 
     ActivityIndicator,
     Dimensions,
-    Text,  
-    CameraRoll  
+    // Text,  
+    CameraRoll,   
 } from 'react-native'
+import { Container, Header, DeckSwiper, Card, 
+    CardItem, Thumbnail, Text, Left, Body, Icon } from 'native-base';
+
 import { COLOR_GREEN, COLOR_RED, globalCSS, COLOR_ORANGE} from '../GlobalCSS'
 const {width, height} = Dimensions.get('window')
 import ImagePicker from 'react-native-image-crop-picker';
@@ -31,41 +34,48 @@ export default class DetailProductComponent extends Component {
             name: '',
             imageURL: 'https://media1.tenor.com/images/db85ba00c6073b451a8f05156a66524e/tenor.gif?itemid=9856796',
             description: '',
-            isLoading: false
+            isLoading: false,
+            imageUrls: []
         }
     }
 
-    createFormData = (photo, body) => {
+    createFormData = (photos, body) => {
         const data = new FormData();
-        data.append("photo", {
-            name: photo.filename,
-            type: photo.mime,
-            uri:
-                Platform.OS === "android" ? photo.path : photo.path.replace("file://", "")
-        });
-
+        var i = 0
+        photos.forEach(photo => {
+            photo.filename = photo.path.split('/').pop()
+            data.append(`photo${i}`, {
+                name: photo.filename,
+                type: photo.mime,
+                uri:
+                    Platform.OS === "android" ? photo.path : photo.path.replace("file://", "")
+            });
+            i = i + 1
+        })
         Object.keys(body).forEach(key => {
             data.append(key, body[key]);
         });
 
         return data;
     };
-    handleUploadPhoto = async (photo) => {
+    handleUploadPhoto = async (photos) => {
         try {            
-            photo.filename = photo.path.split('/').pop()
-            debugger
+            
             let response = await fetch(urlUploadPhoto, {
                 method: "POST",                
-                body: this.createFormData(photo, { name: "Hoang" })
-            })
+                body: this.createFormData(photos, { name: "Hoang" })
+            })            
             let responseJson = await response.json()
-            if(responseJson.status === "ok") {
-                responseJson.imageNames.map(imageName => {
+            
+            if(responseJson.result === "ok") {
+                debugger
+                let imageUrls = responseJson.imageNames.map(imageName => {
                     return urlGetPhoto(imageName)
                 })
+                this.setState({imageUrls})
+                alert(JSON.stringify(imageUrls))
             }
-
-            alert("Upload success!")
+            
         } catch (error) {
             debugger
             alert("Upload failed!:" + error)
@@ -99,10 +109,7 @@ export default class DetailProductComponent extends Component {
                     let photos = await ImagePicker.openPicker({
                         multiple: true
                       })
-                    photos.forEach(async (photo) => {
-                        debugger
-                        await this.handleUploadPhoto(photo)
-                    })
+                    await this.handleUploadPhoto(photos)
                 }} >
                 <Image source={{uri: imageURL}}                
                 style={styles.imageProfile} />
@@ -138,11 +145,28 @@ export default class DetailProductComponent extends Component {
             >
                 <Text style={[styles.loginButtonText, {backgroundColor: COLOR_GREEN}]}>
                     Save</Text>
-            </TouchableOpacity>                       
+            </TouchableOpacity>  
+            <ImageList imageUrls={this.state.imageUrls}/>
             </ScrollView>     
             </KeyboardAvoidingView> 
         </SafeAreaView>        
     }
+}
+const ImageList = (props) => {
+    const {images} = props
+    return <DeckSwiper
+        dataSource={images}
+        renderItem={item =>
+            <Card style={{ elevation: 2 }}>
+                <CardItem cardBody>
+                    <Image style={{ height: 300, flex: 1 }} source={{uri: item}} />
+                </CardItem>
+                <CardItem>
+                    <Icon name="heart" style={{ color: '#ED4A6A' }} />
+                </CardItem>
+            </Card>
+        }
+    />
 }
 const styles = StyleSheet.create({
     container: {

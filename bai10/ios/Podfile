@@ -40,8 +40,6 @@ target 'bai032' do
   pod 'React-RCTPushNotification', :path => '../node_modules/react-native/Libraries/PushNotificationIOS'
   pod 'RNImageCropPicker', :path => '../node_modules/react-native-image-crop-picker'
 
-  pod 'react-native-heic-converter', :path => '../node_modules/react-native-heic-converter'
-
   target 'bai032Tests' do
     inherit! :search_paths
     # Pods for testing
